@@ -146,9 +146,9 @@ async def _publish(settings, store, pulse_md, report, *, dry_run, retry_unknown,
 
 def run_publish(
     settings: Settings, store: RunStore, *, dry_run: bool = False, retry_unknown: bool = False,
-    session_factory: SessionFactory = open_session,
+    session_factory: SessionFactory | None = None,
 ) -> dict:
     pulse_md, report = _check_ready(settings, store)
     return asyncio.run(_publish(
         settings, store, pulse_md, report, dry_run=dry_run,
-        retry_unknown=retry_unknown, factory=session_factory))
+        retry_unknown=retry_unknown, factory=session_factory or open_session))
