@@ -87,6 +87,25 @@ def pipeline(args: list[str], run_id: str) -> None:
     st.session_state["job_name"] = " ".join(args)
 
 
+def pretty_log(text: str, limit: int = 15) -> str:
+    """Turn the pipeline's JSON log lines into short readable ones (last `limit`)."""
+    out = []
+    for line in text.splitlines():
+        try:
+            e = json.loads(line)
+        except json.JSONDecodeError:
+            out.append(line)             # plain text such as the CLI's final message
+            continue
+        extras = {k: v for k, v in e.items() if k in
+                  ("pages", "reviews", "input_count", "output_count", "themes", "words",
+                   "tokens_in", "tokens_out", "problem", "error", "step")}
+        detail = " ".join(f"{k}={v}" for k, v in extras.items())
+        tag = "" if e.get("level") == "INFO" else f"[{e.get('level')}] "
+        out.append(f"{e.get('ts', '')[11:19]} {tag}{e.get('stage', e.get('logger', ''))}: "
+                   f"{e.get('msg', '')} {detail}".rstrip())
+    return "\n".join(out[-limit:])
+
+
 def admin_panel() -> None:
     st.subheader("Run the pipeline")
     password = admin_password()
@@ -105,6 +124,12 @@ def admin_panel() -> None:
     if missing:
         st.warning(f"Missing settings: {', '.join(missing)}")
 
+    run_folder = ROOT / "data" / "runs" / run_id
+    has_pulse = (run_folder / "pulse.md").is_file() and (run_folder / "run_report.json").is_file()
+    if not has_pulse:
+        st.info(f"No pulse for {run_id} on this server yet. Run Ingest, then Analyze, before "
+                "publishing. The saved W41 sample on the first tab is view-only.")
+
     job = st.session_state.get("job")
     busy = job is not None and job.poll() is None
     a, b, c, d = st.columns(4)
@@ -112,18 +137,16 @@ def admin_panel() -> None:
         pipeline(["ingest"], run_id); st.rerun()
     if b.button("Analyze (about 15 min)", disabled=busy):
         pipeline(["analyze"], run_id); st.rerun()
-    if c.button("Dry-run publish", disabled=busy):
+    if c.button("Dry-run publish", disabled=busy or not has_pulse):
         pipeline(["publish", "--dry-run"], run_id); st.rerun()
     confirm = d.checkbox("I want to send the email")
-    if d.button("Publish", disabled=busy or not confirm, type="primary"):
+    if d.button("Publish", disabled=busy or not confirm or not has_pulse, type="primary"):
         pipeline(["publish"], run_id); st.rerun()
 
     if job is not None:
         state = "running" if busy else f"finished (exit code {job.returncode})"
         st.write(f"Job `{st.session_state['job_name']}`: **{state}**")
-        lines = st.session_state["job_log"].read_text().splitlines()
-        shown = [l for l in lines if '"level": "INFO"' not in l][-15:]
-        st.code("\n".join(shown) or "(no output yet)")
+        st.code(pretty_log(st.session_state["job_log"].read_text()) or "(starting, no output yet)")
         st.button("Refresh")
 
 

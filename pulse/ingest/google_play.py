@@ -90,6 +90,9 @@ class GooglePlayAdapter:
         while yielded < max_reviews:
             items, token = self._fetch_with_backoff(token)
             self.pages_fetched += 1
+            if self.pages_fetched % 5 == 0:
+                log.info("ingest progress", extra={
+                    "stage": "ingest", "pages": self.pages_fetched, "reviews": yielded})
             if not items:
                 return
             reached_window_end = False
