@@ -1,0 +1,15 @@
+# Groww App Review Pulse — Week of {{ week_start }}
+_{{ n_reviews }} public reviews · {{ window }} · Avg rating {{ avg_rating }}{% if delta %} ({{ delta }} vs prior){% endif %}_
+
+## Top themes
+{% for t in themes -%}
+{{ loop.index }}. **{{ t.name }}** — {{ t.one_liner }} ({{ t.share }}% of reviews)
+{% endfor %}
+## What users said
+{% for q in quotes -%}
+> "{{ q }}"
+
+{% endfor %}## Action ideas
+{% for a in actions -%}
+{{ loop.index }}. {{ a.text }} _({{ a.owner }})_
+{% endfor %}

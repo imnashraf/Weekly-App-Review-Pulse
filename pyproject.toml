@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pulse"
+version = "0.1.0"
+description = "Weekly Groww app review pulse: Google Play reviews to Google Docs and Gmail via MCP"
+requires-python = ">=3.11"
+dependencies = [
+    "google-play-scraper>=1.2.7",
+    "pydantic>=2.6",
+    "pyyaml>=6.0",
+    "python-dotenv>=1.0",
+    "jinja2>=3.1",
+    "mcp>=2.0",
+]
+
+[project.optional-dependencies]
+# No LLM SDK needed: pulse/llm/providers.py talks to Gemini / OpenAI / Anthropic over HTTPS.
+dev = ["pytest>=8.0"]
+
+[tool.setuptools.packages.find]
+include = ["pulse*"]
+
+[tool.setuptools.package-data]
+pulse = ["llm/prompts/*", "compose/*.j2"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

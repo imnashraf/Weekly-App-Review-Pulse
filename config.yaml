@@ -1,0 +1,32 @@
+app:
+  google_play_id: com.nextbillion.groww
+  country: in
+  language: en
+window:
+  weeks: 12            # 8–12
+limits:
+  max_reviews_per_source: 20000
+  max_themes: 5
+  pulse_max_words: 250
+  min_review_words: 9   # keep reviews with more than 8 words
+analysis:
+  sample_size: 300     # Pass A: reviews sampled for theme discovery
+  batch_size: 50        # Pass B: reviews per classification call
+  max_other_share: 0.40 # warn if more than this share of reviews is labeled 'other'
+llm:
+  provider: gemini      # gemini | anthropic | openai
+  model: "gemini-3.8-flash"
+  temperature: 0.2
+  max_output_tokens: 8192
+  # price_per_mtok_in: 0.0   # optional, USD per 1M tokens, for cost logging
+  # price_per_mtok_out: 0.0
+mcp:
+  url: https://mcp-server-production-d658.up.railway.app/mcp   # bearer token comes from MCP_ACCESS_TOKEN
+  tools:
+    status: google_workspace_status
+    docs_append: google_docs_append_text
+    gmail_send: gmail_send_email
+  docs:
+    document: "${PULSE_DOC_ID}"   # existing Google Doc the weekly pulse is appended to
+delivery:
+  recipient: "${PULSE_RECIPIENT}"

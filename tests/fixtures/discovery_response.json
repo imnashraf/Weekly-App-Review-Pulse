@@ -1,0 +1,59 @@
+{
+  "themes": [
+    {
+      "id": "T1",
+      "name": "App performance & order execution",
+      "description": "App lags, freezes or shows delayed prices and charts, especially during trading hours and after updates.",
+      "include_cues": [
+        "lagging",
+        "freezes",
+        "chart not loading",
+        "order execution slow"
+      ]
+    },
+    {
+      "id": "T2",
+      "name": "Customer support",
+      "description": "Support is slow, unreachable or unhelpful.",
+      "include_cues": [
+        "customer support",
+        "IVR",
+        "no reply",
+        "ticket"
+      ]
+    },
+    {
+      "id": "T3",
+      "name": "Money in/out & KYC",
+      "description": "Problems with KYC verification, deposits, withdrawals and payments.",
+      "include_cues": [
+        "kyc",
+        "withdraw",
+        "money not credited",
+        "upi"
+      ]
+    },
+    {
+      "id": "T4",
+      "name": "Charges & brokerage",
+      "description": "Brokerage, interest rates and fees are seen as too high.",
+      "include_cues": [
+        "brokerage",
+        "charges",
+        "interest rate",
+        "exit load"
+      ]
+    },
+    {
+      "id": "T5",
+      "name": "Feature requests & UX",
+      "description": "Requests for new features or changes to charts, SIPs and layouts.",
+      "include_cues": [
+        "please add",
+        "option",
+        "feature",
+        "landscape"
+      ]
+    }
+  ]
+}
