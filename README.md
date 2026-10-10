@@ -4,6 +4,8 @@ Turns a week of public Google Play reviews for the Groww app into a one-page
 summary a team can scan in minutes: what users care about, what they actually
 said, and what to do next.
 
+**Live app:** https://weekly-app-review-pulse-zvhr3mv7zz7kk87mavs9fh.streamlit.app/
+
 ## What it produces
 - Top 3 themes (chosen from at most 5), with each theme's share of reviews
 - 3 verbatim, anonymous user quotes
