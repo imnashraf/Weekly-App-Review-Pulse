@@ -1,0 +1,274 @@
+{
+  "run_id": "2026-W41",
+  "status": "passed",
+  "window": {
+    "run_date": "2026-10-09",
+    "window_start": "2026-07-17",
+    "window_weeks": 12,
+    "oldest_review": "2026-07-17",
+    "newest_review": "2026-10-08"
+  },
+  "counts": {
+    "fetched": 12930,
+    "cleaned": 1588,
+    "labeled": 1588,
+    "dropped": {
+      "empty": 290,
+      "too_short": 10602,
+      "emoji": 196,
+      "non_english_script": 68,
+      "hinglish": 185,
+      "duplicate": 1
+    },
+    "pii_redactions": {
+      "name": 3,
+      "number": 1,
+      "phone": 2,
+      "upi": 1
+    }
+  },
+  "themes": {
+    "discovered": [
+      {
+        "id": "T1",
+        "name": "App Stability and Order Execution",
+        "description": "Users complain about app lag, freezing during active market hours, and delayed or malfunctioning stop-loss and order executions causing financial losses.",
+        "include_cues": [
+          "glitch",
+          "lagging",
+          "order execution",
+          "stop-loss",
+          "app hanged",
+          "delayed"
+        ]
+      },
+      {
+        "id": "T2",
+        "name": "Customer Support and Issue Resolution",
+        "description": "Users report unresponsive customer care, endless hold times on calls, unhelpful automated messages, and tickets left unresolved for days.",
+        "include_cues": [
+          "customer service",
+          "customer support",
+          "no reply",
+          "no response",
+          "call never connects",
+          "support team"
+        ]
+      },
+      {
+        "id": "T3",
+        "name": "Trading Features and Interface Usability",
+        "description": "Traders ask for improved charting tools and multi-chart layouts while expressing annoyance over intrusive UI changes and accidental scalper button presses.",
+        "include_cues": [
+          "scalper button",
+          "multiple charts",
+          "trailing stop loss",
+          "landscape mode",
+          "UI changes",
+          "indicators"
+        ]
+      },
+      {
+        "id": "T4",
+        "name": "High Brokerage and Unexpected Charges",
+        "description": "Users complain about high per-order brokerage compared to competitors, steep DP charges, and unexpected deductions that wipe out small trading gains.",
+        "include_cues": [
+          "high brokerage",
+          "charges are very high",
+          "Rs.20/order",
+          "DP charges",
+          "brokerage and other charge",
+          "deduction"
+        ]
+      },
+      {
+        "id": "T5",
+        "name": "Money Transfers and Account Operations",
+        "description": "Users report delays in withdrawing funds to their bank accounts, UPI transaction failures, and hurdles when modifying KYC details or closing demat accounts.",
+        "include_cues": [
+          "withdrawal",
+          "deposit money",
+          "UPI",
+          "close demat",
+          "KYC",
+          "negative balance"
+        ]
+      }
+    ],
+    "stats": {
+      "T1": {
+        "name": "App Stability and Order Execution",
+        "count": 220,
+        "share": 0.1385
+      },
+      "T2": {
+        "name": "Customer Support and Issue Resolution",
+        "count": 155,
+        "share": 0.0976
+      },
+      "T3": {
+        "name": "Trading Features and Interface Usability",
+        "count": 289,
+        "share": 0.182
+      },
+      "T4": {
+        "name": "High Brokerage and Unexpected Charges",
+        "count": 137,
+        "share": 0.0863
+      },
+      "T5": {
+        "name": "Money Transfers and Account Operations",
+        "count": 149,
+        "share": 0.0938
+      }
+    },
+    "other": {
+      "count": 638,
+      "share": 0.4018
+    },
+    "ranking": [
+      {
+        "theme_id": "T1",
+        "name": "App Stability and Order Execution",
+        "description": "Users complain about app lag, freezing during active market hours, and delayed or malfunctioning stop-loss and order executions causing financial losses.",
+        "volume": 220,
+        "share": 0.1385,
+        "neg_share": 0.9364,
+        "trend": 0.0295,
+        "score": 325.32,
+        "rank": 1
+      },
+      {
+        "theme_id": "T3",
+        "name": "Trading Features and Interface Usability",
+        "description": "Traders ask for improved charting tools and multi-chart layouts while expressing annoyance over intrusive UI changes and accidental scalper button presses.",
+        "volume": 289,
+        "share": 0.182,
+        "neg_share": 0.4671,
+        "trend": -0.0715,
+        "score": 279.5,
+        "rank": 2
+      },
+      {
+        "theme_id": "T2",
+        "name": "Customer Support and Issue Resolution",
+        "description": "Users report unresponsive customer care, endless hold times on calls, unhelpful automated messages, and tickets left unresolved for days.",
+        "volume": 155,
+        "share": 0.0976,
+        "neg_share": 0.9484,
+        "trend": 0.0278,
+        "score": 230.74,
+        "rank": 3
+      },
+      {
+        "theme_id": "T5",
+        "name": "Money Transfers and Account Operations",
+        "description": "Users report delays in withdrawing funds to their bank accounts, UPI transaction failures, and hurdles when modifying KYC details or closing demat accounts.",
+        "volume": 149,
+        "share": 0.0938,
+        "neg_share": 0.8926,
+        "trend": 0.0486,
+        "score": 217.58,
+        "rank": 4
+      },
+      {
+        "theme_id": "T4",
+        "name": "High Brokerage and Unexpected Charges",
+        "description": "Users complain about high per-order brokerage compared to competitors, steep DP charges, and unexpected deductions that wipe out small trading gains.",
+        "volume": 137,
+        "share": 0.0863,
+        "neg_share": 0.7445,
+        "trend": -0.0028,
+        "score": 170.5,
+        "rank": 5
+      }
+    ],
+    "in_pulse": [
+      "T1",
+      "T3",
+      "T2"
+    ]
+  },
+  "pulse": {
+    "file": "pulse.md",
+    "words": 208,
+    "max_words": 250,
+    "word_remedies": []
+  },
+  "gates": [
+    {
+      "name": "schema",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "theme_cap",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "counts",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "verbatim",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "word_count",
+      "passed": true,
+      "detail": "208 words"
+    },
+    {
+      "name": "pii",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "warnings": [
+    "40% of reviews are labeled 'other' (limit 40%); the themes may miss a big topic"
+  ],
+  "prompt_versions": {
+    "discovery": "discovery_v1",
+    "classification": "classification_v1",
+    "quotes": "quotes_v1",
+    "actions": "actions_v1",
+    "one_liners": "one_liners_v1"
+  },
+  "llm": {
+    "calls": 40,
+    "tokens_in": 106267,
+    "tokens_out": 150322,
+    "cost_usd": null,
+    "by_stage": {
+      "themes": {
+        "model": "gemini-3.8-flash",
+        "calls": 35,
+        "validation_retries": 2,
+        "tokens_in": 100153,
+        "tokens_out": 145828,
+        "cost_usd": null
+      },
+      "insights": {
+        "model": "gemini-3.8-flash",
+        "calls": 4,
+        "validation_retries": 0,
+        "tokens_in": 5754,
+        "tokens_out": 3629,
+        "cost_usd": null
+      },
+      "compose": {
+        "model": "gemini-3.8-flash",
+        "calls": 1,
+        "validation_retries": 0,
+        "tokens_in": 360,
+        "tokens_out": 865,
+        "cost_usd": null
+      }
+    }
+  },
+  "doc_url": null,
+  "publish": null
+}
