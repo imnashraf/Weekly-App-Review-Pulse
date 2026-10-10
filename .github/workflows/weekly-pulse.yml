@@ -1,0 +1,75 @@
+name: Weekly pulse
+
+on:
+  schedule:
+    - cron: "30 3 * * 1"      # Mondays 03:30 UTC = 09:00 IST
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run: render the pulse but do not append to the doc or send email"
+        type: boolean
+        default: true
+      run_id:
+        description: "Run id such as 2026-W41 (blank = current ISO week)"
+        type: string
+        default: ""
+
+# Never run two at once: a second run could publish the same week twice.
+concurrency:
+  group: weekly-pulse
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  pulse:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+      MCP_ACCESS_TOKEN: ${{ secrets.MCP_ACCESS_TOKEN }}
+      PULSE_RECIPIENT: ${{ secrets.PULSE_RECIPIENT }}
+      PULSE_DOC_ID: ${{ secrets.PULSE_DOC_ID }}
+      # Scheduled runs publish for real; manual runs follow the dry_run input (default: dry run).
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'true' || 'false' }}
+      RUN_ID: ${{ github.event_name == 'workflow_dispatch' && inputs.run_id || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -e .
+
+      # Run folders are kept between runs, so a re-run resumes and never publishes twice.
+      - name: Restore previous runs
+        uses: actions/cache/restore@v4
+        with:
+          path: data/runs
+          key: pulse-runs-${{ github.run_id }}
+          restore-keys: pulse-runs-
+
+      - name: Run the pipeline
+        run: |
+          args=""
+          [ "$DRY_RUN" = "true" ] && args="$args --dry-run"
+          [ -n "$RUN_ID" ] && args="$args --run $RUN_ID"
+          python -m pulse run $args
+
+      - name: Save runs
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: data/runs
+          key: pulse-runs-${{ github.run_id }}
+
+      - name: Keep the pulse and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pulse-${{ github.run_id }}
+          path: |
+            data/runs/*/pulse.md
+            data/runs/*/run_report.json
+          if-no-files-found: ignore

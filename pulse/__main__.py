@@ -13,7 +13,7 @@ log = logging.getLogger("pulse")
 
 # command -> (env vars it needs, phase that implements it)
 COMMANDS: dict[str, tuple[tuple[str, ...], int, str]] = {
-    "run": (("LLM_API_KEY", "PULSE_RECIPIENT"), 7, "Run the whole pipeline end to end"),
+    "run": (("LLM_API_KEY", "PULSE_RECIPIENT", "MCP_ACCESS_TOKEN", "PULSE_DOC_ID"), 7, "Run the whole pipeline end to end"),
     "ingest": ((), 1, "Fetch and store raw Google Play reviews"),
     "clean": ((), 2, "Normalize, scrub PII, filter and de-duplicate raw reviews"),
     "themes": (("LLM_API_KEY",), 3, "Discover themes and label every cleaned review"),
@@ -37,7 +37,11 @@ def build_parser() -> argparse.ArgumentParser:
                        help="run id such as 2026-W41 (default: current ISO week)")
         p.add_argument("--dry-run", action="store_true",
                        help="render the pulse without calling MCP servers")
-        if name == "publish":
+        if name == "run":
+            from .orchestrator import STAGES
+            p.add_argument("--from", dest="start_from", choices=STAGES, metavar="STAGE",
+                           help=f"re-run this stage and all later ones ({', '.join(STAGES)})")
+        if name in ("run", "publish"):
             p.add_argument("--retry-unknown", action="store_true",
                            help="retry a step whose earlier outcome was unknown (check Google first)")
     return parser
@@ -110,6 +114,23 @@ def main(argv: list[str] | None = None) -> int:
               f"{len(analysis['actions'])} actions -> {store.path(ANALYSIS_FILE)}")
         for warning in analysis["warnings"]:
             print(f"warning: {warning}", file=sys.stderr)
+        return 0
+
+    if args.command == "run":
+        from .orchestrator import StageError, run_all
+
+        resume = f"python -m pulse run --run {store.run_id}"
+        try:
+            results = run_all(settings, store, start_from=args.start_from, dry_run=args.dry_run,
+                              retry_unknown=args.retry_unknown)
+        except StageError as exc:
+            print(f"error: stage '{exc.stage}' failed: {exc}", file=sys.stderr)
+            if store.exists("pulse.md"):
+                print(f"the composed pulse is saved at {store.path('pulse.md')}", file=sys.stderr)
+            print(f"resume with: {resume}   (finished stages are skipped)", file=sys.stderr)
+            return 1
+        summary = ", ".join(f"{r.name} {r.status}" for r in results)
+        print(f"Run {store.run_id}{' (dry run)' if args.dry_run else ''}: {summary}")
         return 0
 
     if args.command == "publish":

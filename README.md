@@ -26,10 +26,20 @@ text is re-scanned for personal data. If any gate fails, nothing is published.
     python -m pulse publish --dry-run
     python -m pulse publish
 
+## One command and weekly schedule
+    python -m pulse run                 # ingest → clean → themes → rank → compose → publish
+    python -m pulse run --dry-run       # everything except the doc append and the email
+    python -m pulse run --from compose  # re-run one stage and all later ones
+
+Finished stages are skipped, so a failed run resumes where it stopped and never
+publishes twice. A GitHub Actions workflow (`.github/workflows/weekly-pulse.yml`)
+runs it every Monday at 09:00 IST. It needs the four secrets below as repository
+secrets. Manual runs from the Actions tab default to a dry run.
+
 ## Configuration
 `LLM_API_KEY`, `PULSE_RECIPIENT`, `MCP_ACCESS_TOKEN` and `PULSE_DOC_ID` go in `.env`.
 Model, window and limits are in `config.yaml`.
 
 ## Status
-Phases 0–6 are done. Orchestration and scheduling are next. See
+Phases 0–7 are done. Hardening and documentation (phase 8) are next. See
 [docs/implementation-plan.md](docs/implementation-plan.md).
